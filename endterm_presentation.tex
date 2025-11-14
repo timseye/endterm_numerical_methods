@@ -4,7 +4,14 @@
 
 \documentclass[aspectratio=169]{beamer}
 \usetheme{Madrid}
-\usecolortheme{default}
+\usecolortheme{seagull}
+
+% Custom color definitions
+\definecolor{darkgreen}{RGB}{0,100,0}
+\definecolor{darkorange}{RGB}{200,80,0}
+\setbeamercolor{structure}{fg=darkgreen}
+\setbeamercolor{block title}{bg=darkgreen!20,fg=black}
+\setbeamercolor{block body}{bg=gray!10,fg=black}
 
 % Packages
 \usepackage{amsmath}
@@ -18,6 +25,10 @@
 \usepackage{xcolor}
 \usepackage{tikz}
 \usetikzlibrary{shapes,arrows,positioning}
+
+% Custom itemize symbols
+\setbeamertemplate{itemize items}[triangle]
+\setbeamertemplate{enumerate items}[circle]
 
 % Title Information
 \title[Transportation Problem]{Optimization of Transportation Networks:\\A Linear Programming Approach}
@@ -85,7 +96,6 @@
     \begin{itemize}
       \item Transportation costs represent 10-15\% of product price
       \item Optimization can reduce costs by 15-30\%
-      \item Critical for competitive advantage
     \end{itemize}
   \end{block}
   
@@ -93,14 +103,12 @@
     \begin{itemize}
       \item \textbf{Who:} Supply chain managers, logistics planners
       \item \textbf{What:} Allocation decisions, route planning
-      \item \textbf{When:} Strategic planning and operational execution
     \end{itemize}
   \end{block}
   
-  \begin{alertblock}{Research Context}
-    Transportation problem first formulated by Hitchcock (1941) during WWII for military logistics. 
-    Remains highly relevant for modern optimization challenges.
-  \end{alertblock}
+  \begin{block}{Research Context}
+    Transportation problem first formulated by Hitchcock (1941) during WWII for military logistics.
+  \end{block}
 \end{frame}
 
 \begin{frame}{Literature Review}
@@ -111,21 +119,19 @@
     \item \textbf{Reinfeld \& Vogel (1958)}: Vogel's Approximation Method (VAM)
   \end{itemize}
   
-  \vspace{0.3cm}
+  \vspace{0.2cm}
   \textbf{Modern Applications:}
   \begin{itemize}
-    \item \textbf{Supply Chain Management}: Dynamic multi-period models (MPSSP)
-    \item \textbf{Network Design}: Capacitated assignment problems (GAP, CCAP)
-    \item \textbf{Healthcare Logistics}: Emergency medical supply distribution
-    \item \textbf{Manufacturing}: Multi-plant production allocation
+    \item \textbf{Supply Chain Management}: Dynamic multi-period models
+    \item \textbf{Network Design}: Capacitated assignment problems
+    \item \textbf{Healthcare Logistics}: Emergency supply distribution
   \end{itemize}
   
-  \vspace{0.3cm}
+  \vspace{0.2cm}
   \textbf{Solution Methods Evolution:}
   \begin{itemize}
     \item Classical: North-West Corner, Least Cost, VAM
     \item Optimization: MODI, Stepping Stone, Hungarian Method
-    \item Advanced: Branch \& Price, Column Generation, Metaheuristics
   \end{itemize}
 \end{frame}
 
@@ -178,9 +184,9 @@
     \end{equation*}
   \end{block}
   
-  \begin{alertblock}{Balance Condition}
+  \begin{block}{Balance Condition}
     $\sum_{i=1}^{m} a_i = \sum_{j=1}^{n} b_j$ (Add dummy if unbalanced)
-  \end{alertblock}
+  \end{block}
 \end{frame}
 
 \begin{frame}{Problem Instances}
@@ -243,9 +249,9 @@
     
     \begin{column}{0.5\textwidth}
       \begin{tikzpicture}[node distance=1.5cm, auto]
-        \tikzstyle{block} = [rectangle, draw, fill=blue!20, 
+        \tikzstyle{block} = [rectangle, draw, fill=gray!15, 
             text width=5em, text centered, rounded corners, minimum height=2em]
-        \tikzstyle{decision} = [diamond, draw, fill=green!20, 
+        \tikzstyle{decision} = [diamond, draw, fill=orange!20, 
             text width=4em, text badly centered, inner sep=0pt]
         \tikzstyle{line} = [draw, -latex']
         
@@ -460,7 +466,6 @@
     \begin{itemize}
       \item VAM provides excellent initial solution (within 3\% of optimal)
       \item MODI converges in 2-3 iterations for typical problems
-      \item Computational complexity: $O(m^2n^2)$ per iteration
     \end{itemize}
   \end{block}
   
@@ -504,9 +509,9 @@
   \end{table}
   
   \vspace{0.3cm}
-  \begin{alertblock}{Validation Result}
+  \begin{block}{Validation Result}
     All three methods produce \textbf{identical optimal solutions}, confirming correctness of custom implementation.
-  \end{alertblock}
+  \end{block}
 \end{frame}
 
 \begin{frame}{Validation Strategy}
@@ -670,7 +675,8 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}[standout]
+\begin{frame}
+  \begin{center}
   \Huge
   \textbf{Thank You!}
   
@@ -682,6 +688,7 @@
   \normalsize
   \textit{Astana IT University}\\
   \textit{Numerical Methods - Fall 2025}
+  \end{center}
 \end{frame}
 
 \end{document}
