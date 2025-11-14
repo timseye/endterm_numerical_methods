@@ -403,71 +403,38 @@
 \end{frame}
 
 \begin{frame}[fragile]{Code Implementation: VAM Algorithm (Part 1)}
-  \textbf{Python Implementation - Penalty Calculation:}
-  
   \begin{figure}
     \centering
-    \includegraphics[width=0.85\textwidth]{figures/image.png}
-    \caption{VAM penalty calculation logic}
+    \includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{figures/image.png}
   \end{figure}
 \end{frame}
 
 \begin{frame}[fragile]{Code Implementation: VAM Algorithm (Part 2)}
-  \textbf{Python Implementation - Allocation Logic:}
-  
   \begin{figure}
     \centering
-    \includegraphics[width=0.85\textwidth]{figures/image copy.png}
-    \caption{VAM allocation and cost calculation}
+    \includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{figures/image copy.png}
   \end{figure}
 \end{frame}
 
 \begin{frame}[fragile]{Code Implementation: VAM Algorithm (Part 3)}
-  \textbf{Python Implementation - Complete Method:}
-  
   \begin{figure}
     \centering
-    \includegraphics[width=0.85\textwidth]{figures/image copy 2.png}
-    \caption{VAM full implementation}
+    \includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{figures/image copy 2.png}
   \end{figure}
 \end{frame}
 
 \begin{frame}[fragile]{Code Implementation: MODI Method}
-  \textbf{Python Implementation of Modified Distribution Method:}
-  
   \begin{figure}
     \centering
-    \includegraphics[width=0.85\textwidth]{figures/image copy 3.png}
-    \caption{MODI implementation: dual variables and optimality check}
+    \includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{figures/image copy 3.png}
   \end{figure}
-  
-  \vspace{0.2cm}
-  \small
-  \textbf{Key Features:}
-  \begin{itemize}
-    \item Calculate $u_i$ and $v_j$ dual variables
-    \item Compute opportunity costs for unallocated cells
-    \item Find improving loop and adjust allocations
-  \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{Code Implementation: Library Solvers}
-  \textbf{Integration with Standard Libraries:}
-  
   \begin{figure}
     \centering
-    \includegraphics[width=0.85\textwidth]{figures/image copy 4.png}
-    \caption{SciPy linprog and PuLP CBC solver usage}
+    \includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{figures/image copy 4.png}
   \end{figure}
-  
-  \vspace{0.2cm}
-  \small
-  \textbf{Validation Approach:}
-  \begin{itemize}
-    \item SciPy: \texttt{linprog} with Simplex/Interior Point methods
-    \item PuLP: CBC solver with LP problem formulation
-    \item Cross-validation confirms custom implementation
-  \end{itemize}
 \end{frame}
 
 \begin{frame}{Implementation Details}
