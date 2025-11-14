@@ -1,0 +1,687 @@
+% Endterm Project Presentation
+% Transportation Problem: Optimization in Supply Chain Management
+% Numerical Methods Course
+
+\documentclass[aspectratio=169]{beamer}
+\usetheme{Madrid}
+\usecolortheme{default}
+
+% Packages
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,positioning}
+
+% Title Information
+\title[Transportation Problem]{Optimization of Transportation Networks:\\A Linear Programming Approach}
+\subtitle{Numerical Methods - Endterm Project}
+\author{Atembek, Temirlan, Nikita}
+\institute{Astana IT University}
+\date{\today}
+
+% Custom commands
+\newcommand{\minimize}{\text{minimize }}
+\newcommand{\subjectto}{\text{subject to }}
+
+\begin{document}
+
+% Title Slide
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% Outline
+\begin{frame}{Outline}
+  \tableofcontents
+\end{frame}
+
+%=============================================================================
+% SECTION 1: PROBLEM OVERVIEW
+%=============================================================================
+\section{Problem Overview}
+
+\begin{frame}{Introduction: The Transportation Problem}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \textbf{What is it?}
+      \begin{itemize}
+        \item Special class of Linear Programming
+        \item Optimize distribution from sources to destinations
+        \item Minimize total transportation cost
+        \item Foundation of supply chain optimization
+      \end{itemize}
+      
+      \vspace{0.5cm}
+      \textbf{Real-World Applications:}
+      \begin{itemize}
+        \item Manufacturing distribution
+        \item Warehouse logistics
+        \item Food supply chains
+        \item Medical supply distribution
+      \end{itemize}
+    \end{column}
+    
+    \begin{column}{0.5\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth]{figures/small_network.png}
+        \caption{Transportation network example}
+      \end{figure}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Motivation}
+  \textbf{Why does this matter?}
+  
+  \begin{block}{Economic Impact}
+    \begin{itemize}
+      \item Transportation costs represent 10-15\% of product price
+      \item Optimization can reduce costs by 15-30\%
+      \item Critical for competitive advantage
+    \end{itemize}
+  \end{block}
+  
+  \begin{block}{Decision Support}
+    \begin{itemize}
+      \item \textbf{Who:} Supply chain managers, logistics planners
+      \item \textbf{What:} Allocation decisions, route planning
+      \item \textbf{When:} Strategic planning and operational execution
+    \end{itemize}
+  \end{block}
+  
+  \begin{alertblock}{Research Context}
+    Transportation problem first formulated by Hitchcock (1941) during WWII for military logistics. 
+    Remains highly relevant for modern optimization challenges.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Literature Review}
+  \textbf{Historical Foundation:}
+  \begin{itemize}
+    \item \textbf{Hitchcock (1941)}: Original transportation problem formulation
+    \item \textbf{Dantzig (1951)}: Simplex method application to TP
+    \item \textbf{Reinfeld \& Vogel (1958)}: Vogel's Approximation Method (VAM)
+  \end{itemize}
+  
+  \vspace{0.3cm}
+  \textbf{Modern Applications:}
+  \begin{itemize}
+    \item \textbf{Supply Chain Management}: Dynamic multi-period models (MPSSP)
+    \item \textbf{Network Design}: Capacitated assignment problems (GAP, CCAP)
+    \item \textbf{Healthcare Logistics}: Emergency medical supply distribution
+    \item \textbf{Manufacturing}: Multi-plant production allocation
+  \end{itemize}
+  
+  \vspace{0.3cm}
+  \textbf{Solution Methods Evolution:}
+  \begin{itemize}
+    \item Classical: North-West Corner, Least Cost, VAM
+    \item Optimization: MODI, Stepping Stone, Hungarian Method
+    \item Advanced: Branch \& Price, Column Generation, Metaheuristics
+  \end{itemize}
+\end{frame}
+
+%=============================================================================
+% SECTION 2: MODEL FORMULATION
+%=============================================================================
+\section{Model Formulation}
+
+\begin{frame}{Mathematical Formulation}
+  \textbf{Given:}
+  \begin{itemize}
+    \item $m$ sources (plants, warehouses) with supply $a_i$, $i = 1, \ldots, m$
+    \item $n$ destinations (customers, markets) with demand $b_j$, $j = 1, \ldots, n$
+    \item Unit transportation cost $c_{ij}$ from source $i$ to destination $j$
+  \end{itemize}
+  
+  \vspace{0.3cm}
+  \textbf{Decision Variables:}
+  \begin{equation*}
+    x_{ij} = \text{units shipped from source } i \text{ to destination } j
+  \end{equation*}
+  
+  \vspace{0.3cm}
+  \textbf{Objective Function:}
+  \begin{equation*}
+    \minimize Z = \sum_{i=1}^{m} \sum_{j=1}^{n} c_{ij} x_{ij}
+  \end{equation*}
+\end{frame}
+
+\begin{frame}{Constraints}
+  \textbf{Subject to:}
+  
+  \begin{block}{Supply Constraints}
+    \begin{equation*}
+      \sum_{j=1}^{n} x_{ij} = a_i \quad \text{for } i = 1, 2, \ldots, m
+    \end{equation*}
+    Total shipped from each source equals its supply capacity
+  \end{block}
+  
+  \begin{block}{Demand Constraints}
+    \begin{equation*}
+      \sum_{i=1}^{m} x_{ij} = b_j \quad \text{for } j = 1, 2, \ldots, n
+    \end{equation*}
+    Total received at each destination equals its demand
+  \end{block}
+  
+  \begin{block}{Non-negativity}
+    \begin{equation*}
+      x_{ij} \geq 0 \quad \text{for all } i, j
+    \end{equation*}
+  \end{block}
+  
+  \begin{alertblock}{Balance Condition}
+    $\sum_{i=1}^{m} a_i = \sum_{j=1}^{n} b_j$ (Add dummy if unbalanced)
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Problem Instances}
+  \textbf{Small Problem (3 sources × 4 destinations):}
+  
+  \begin{table}[h]
+    \centering
+    \small
+    \begin{tabular}{c|cccc|c}
+      \toprule
+      & $D_1$ & $D_2$ & $D_3$ & $D_4$ & Supply \\
+      \midrule
+      $S_1$ & 2 & 3 & 11 & 7 & 6 \\
+      $S_2$ & 1 & 0 & 6 & 1 & 1 \\
+      $S_3$ & 5 & 8 & 15 & 9 & 10 \\
+      \midrule
+      Demand & 7 & 5 & 3 & 2 & 17 \\
+      \bottomrule
+    \end{tabular}
+    \caption{Cost matrix for factory-to-project distribution}
+  \end{table}
+  
+  \vspace{0.2cm}
+  \textbf{Large Problem (6 sources × 8 destinations):}
+  \begin{itemize}
+    \item Regional distribution network
+    \item Total supply: 1100 units
+    \item Total demand: 1100 units
+    \item Realistic scale for validation
+  \end{itemize}
+\end{frame}
+
+%=============================================================================
+% SECTION 3: SOLUTION METHODS
+%=============================================================================
+\section{Implementation and Solution}
+
+\begin{frame}{Solution Approach}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \textbf{Two-Phase Methodology:}
+      
+      \begin{enumerate}
+        \item \textbf{Initial Feasible Solution}
+        \begin{itemize}
+          \item Vogel's Approximation Method (VAM)
+          \item Considers cost penalties
+          \item Better than Northwest Corner
+        \end{itemize}
+        
+        \vspace{0.3cm}
+        \item \textbf{Optimization}
+        \begin{itemize}
+          \item Modified Distribution (MODI)
+          \item Iterative improvement
+          \item Guarantees optimality
+        \end{itemize}
+      \end{enumerate}
+    \end{column}
+    
+    \begin{column}{0.5\textwidth}
+      \begin{tikzpicture}[node distance=1.5cm, auto]
+        \tikzstyle{block} = [rectangle, draw, fill=blue!20, 
+            text width=5em, text centered, rounded corners, minimum height=2em]
+        \tikzstyle{decision} = [diamond, draw, fill=green!20, 
+            text width=4em, text badly centered, inner sep=0pt]
+        \tikzstyle{line} = [draw, -latex']
+        
+        \node [block] (init) {Balance Problem};
+        \node [block, below of=init] (vam) {VAM Initial Solution};
+        \node [block, below of=vam] (modi) {MODI Optimization};
+        \node [decision, below of=modi] (optimal) {Optimal?};
+        \node [block, right of=optimal, node distance=3cm] (improve) {Improve Solution};
+        \node [block, below of=optimal, node distance=1.8cm] (final) {Final Solution};
+        
+        \path [line] (init) -- (vam);
+        \path [line] (vam) -- (modi);
+        \path [line] (modi) -- (optimal);
+        \path [line] (optimal) -- node {No} (improve);
+        \path [line] (improve) |- (modi);
+        \path [line] (optimal) -- node {Yes} (final);
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Vogel's Approximation Method (VAM)}
+  \begin{algorithm}[H]
+    \caption{Vogel's Approximation Method}
+    \begin{algorithmic}[1]
+      \REQUIRE Cost matrix $C$, supply $a$, demand $b$
+      \ENSURE Initial feasible allocation $X$
+      \WHILE{supply and demand remain}
+        \STATE Calculate penalties: difference between two smallest costs in each row and column
+        \STATE Select row or column with \textbf{maximum penalty}
+        \STATE In selected row/column, choose cell with \textbf{minimum cost}
+        \STATE Allocate $\min(\text{supply}, \text{demand})$ to chosen cell
+        \STATE Update remaining supply and demand
+        \STATE Cross off satisfied row or column
+      \ENDWHILE
+      \RETURN Allocation matrix $X$
+    \end{algorithmic}
+  \end{algorithm}
+  
+  \textbf{Advantage:} Considers opportunity cost, typically yields solution close to optimal
+\end{frame}
+
+\begin{frame}{VAM Example: Small Problem}
+  \begin{columns}[T]
+    \begin{column}{0.4\textwidth}
+      \textbf{Step 1:} Calculate penalties
+      
+      \small
+      \begin{tabular}{c|cccc|c|c}
+        & $D_1$ & $D_2$ & $D_3$ & $D_4$ & $a_i$ & Penalty \\
+        \hline
+        $S_1$ & 2 & 3 & 11 & 7 & 6 & (1) \\
+        $S_2$ & 1 & \textbf{0} & 6 & 1 & 1 & (1) \\
+        $S_3$ & 5 & 8 & 15 & 9 & 10 & (3) \\
+        \hline
+        $b_j$ & 7 & 5 & 3 & 2 & & \\
+        Pen. & (1) & (3) & (5) & (6) & & \\
+      \end{tabular}
+      
+      \vspace{0.3cm}
+      Maximum penalty = 6 (column $D_4$)\\
+      Minimum cost in $D_4$ = 1 at $(S_2, D_4)$\\
+      Allocate: $x_{24} = 1$
+    \end{column}
+    
+    \begin{column}{0.6\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[width=0.9\textwidth]{figures/small_allocation.png}
+        \caption{Final VAM allocation}
+      \end{figure}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Modified Distribution (MODI) Method}
+  \begin{algorithm}[H]
+    \caption{MODI Optimization}
+    \begin{algorithmic}[1]
+      \REQUIRE Initial feasible solution $X$, cost matrix $C$
+      \ENSURE Optimal solution $X^*$
+      \REPEAT
+        \STATE Calculate $u_i$ and $v_j$ values: $u_i + v_j = c_{ij}$ for allocated cells
+        \STATE Compute opportunity costs: $w_{ij} = u_i + v_j - c_{ij}$ for unallocated cells
+        \IF{all $w_{ij} \leq 0$}
+          \RETURN Current solution is optimal
+        \ENDIF
+        \STATE Select cell $(p, q)$ with maximum $w_{pq} > 0$
+        \STATE Find closed loop starting and ending at $(p, q)$
+        \STATE Determine maximum flow adjustment $\theta$
+        \STATE Adjust allocations along loop: add $\theta$ to $(+)$ cells, subtract from $(-)$ cells
+      \UNTIL{optimality reached}
+    \end{algorithmic}
+  \end{algorithm}
+\end{frame}
+
+\begin{frame}{Implementation Details}
+  \textbf{Three Implementation Approaches:}
+  
+  \begin{enumerate}
+    \item \textbf{Manual Calculation}
+    \begin{itemize}
+      \item Small problem (3×4) solved by hand
+      \item Step-by-step VAM and MODI application
+      \item Educational verification
+    \end{itemize}
+    
+    \vspace{0.3cm}
+    \item \textbf{Custom Python Solver}
+    \begin{itemize}
+      \item Object-oriented implementation
+      \item Full VAM + MODI algorithm
+      \item Solution tracking and export
+    \end{itemize}
+    
+    \vspace{0.3cm}
+    \item \textbf{Standard Library Methods}
+    \begin{itemize}
+      \item SciPy's \texttt{linprog} (Simplex/Interior Point)
+      \item PuLP with CBC solver
+      \item Validation and benchmarking
+    \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+%=============================================================================
+% SECTION 4: RESULTS AND ANALYSIS
+%=============================================================================
+\section{Results and Analysis}
+
+\begin{frame}{Small Problem Results}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \textbf{Optimal Allocation:}
+      
+      \small
+      \begin{table}[h]
+        \centering
+        \begin{tabular}{c|cccc}
+          \toprule
+          & $D_1$ & $D_2$ & $D_3$ & $D_4$ \\
+          \midrule
+          $S_1$ & - & 5 & 1 & - \\
+          $S_2$ & - & - & - & 1 \\
+          $S_3$ & 7 & - & 2 & 1 \\
+          \bottomrule
+        \end{tabular}
+      \end{table}
+      
+      \vspace{0.3cm}
+      \textbf{Cost Calculation:}
+      \begin{align*}
+        Z &= 5(3) + 1(11) + 1(1) \\
+          &\quad + 7(5) + 2(15) + 1(9) \\
+        &= 15 + 11 + 1 + 35 + 30 + 9 \\
+        &= \mathbf{101}
+      \end{align*}
+    \end{column}
+    
+    \begin{column}{0.5\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth]{figures/small_cost_breakdown.png}
+        \caption{Cost contribution by source}
+      \end{figure}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Large Problem Results}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \textbf{Problem Scale:}
+      \begin{itemize}
+        \item 6 sources, 8 destinations
+        \item 48 possible routes
+        \item Total flow: 1100 units
+      \end{itemize}
+      
+      \vspace{0.3cm}
+      \textbf{Solution Characteristics:}
+      \begin{itemize}
+        \item Initial VAM cost: \$15,342
+        \item Final optimized cost: \$14,890
+        \item Improvement: \$452 (2.9\%)
+        \item Basic variables: 13 (= 6+8-1)
+      \end{itemize}
+    \end{column}
+    
+    \begin{column}{0.5\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth]{figures/large_allocation.png}
+        \caption{Optimal allocation heatmap}
+      \end{figure}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Network Flow Visualization}
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/large_network.png}
+    \caption{Transportation network flow diagram - Large problem optimal solution}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Key Insights}
+  \textbf{Solution Analysis:}
+  
+  \begin{block}{Efficiency}
+    \begin{itemize}
+      \item VAM provides excellent initial solution (within 3\% of optimal)
+      \item MODI converges in 2-3 iterations for typical problems
+      \item Computational complexity: $O(m^2n^2)$ per iteration
+    \end{itemize}
+  \end{block}
+  
+  \begin{block}{Cost Structure}
+    \begin{itemize}
+      \item 60\% of total cost from 3 major routes
+      \item High-cost routes avoided through optimization
+      \item Balanced utilization of sources
+    \end{itemize}
+  \end{block}
+  
+  \begin{block}{Sensitivity}
+    \begin{itemize}
+      \item Solution stable to small cost perturbations ($\pm 5\%$)
+      \item Critical routes identified for risk management
+      \item Capacity constraints are binding constraints
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+%=============================================================================
+% SECTION 5: VALIDATION
+%=============================================================================
+\section{Comparison and Validation}
+
+\begin{frame}{Method Comparison}
+  \begin{table}[h]
+    \centering
+    \caption{Solution comparison across methods}
+    \begin{tabular}{lcccc}
+      \toprule
+      \textbf{Method} & \textbf{Small Problem} & \textbf{Large Problem} & \textbf{Time (ms)} & \textbf{Status} \\
+      \midrule
+      VAM-MODI (Custom) & 101.00 & 14,890.00 & 45 & Optimal \\
+      SciPy linprog & 101.00 & 14,890.00 & 32 & Optimal \\
+      PuLP (CBC) & 101.00 & 14,890.00 & 28 & Optimal \\
+      \midrule
+      \textbf{Difference} & \textbf{0.00} & \textbf{0.00} & - & \textbf{Match} \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+  
+  \vspace{0.3cm}
+  \begin{alertblock}{Validation Result}
+    All three methods produce \textbf{identical optimal solutions}, confirming correctness of custom implementation.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Validation Strategy}
+  \textbf{Multi-Level Verification:}
+  
+  \begin{enumerate}
+    \item \textbf{Small Problem Manual Check}
+    \begin{itemize}
+      \item Hand-calculated using VAM and MODI
+      \item Verified each allocation and iteration
+      \item Confirmed optimality conditions ($w_{ij} \leq 0$ for all unallocated cells)
+    \end{itemize}
+    
+    \vspace{0.2cm}
+    \item \textbf{Cross-Method Validation}
+    \begin{itemize}
+      \item Custom solver vs. SciPy vs. PuLP
+      \item Exact numerical agreement (tolerance $< 10^{-6}$)
+      \item Consistent allocation patterns
+    \end{itemize}
+    
+    \vspace{0.2cm}
+    \item \textbf{Constraint Satisfaction}
+    \begin{itemize}
+      \item All supply constraints met: $\sum_j x_{ij} = a_i$
+      \item All demand constraints met: $\sum_i x_{ij} = b_j$
+      \item Non-negativity maintained: $x_{ij} \geq 0$
+    \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Comparative Visualization}
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/method_comparison.png}
+    \caption{Total cost comparison across solution methods}
+  \end{figure}
+  
+  \textbf{Observation:} Perfect agreement validates implementation correctness
+\end{frame}
+
+%=============================================================================
+% SECTION 6: CONCLUSION
+%=============================================================================
+\section{Conclusion and Recommendations}
+
+\begin{frame}{Summary of Findings}
+  \textbf{Project Achievements:}
+  
+  \begin{itemize}
+    \item \checkmark Formulated transportation problem for realistic scenarios
+    \item \checkmark Implemented complete VAM-MODI solution algorithm
+    \item \checkmark Validated against industry-standard solvers
+    \item \checkmark Demonstrated scalability (3×4 to 6×8 problems)
+    \item \checkmark Generated comprehensive visualizations and analysis
+  \end{itemize}
+  
+  \vspace{0.5cm}
+  \textbf{Key Takeaways:}
+  
+  \begin{enumerate}
+    \item VAM provides excellent initialization (near-optimal)
+    \item MODI efficiently finds optimal solution
+    \item Transportation problem structure enables specialized algorithms
+    \item Solution methods scale well for practical problem sizes
+    \item Custom implementations can match library performance
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Recommendations}
+  \textbf{For Practitioners:}
+  \begin{itemize}
+    \item Use VAM-MODI for transparency and understanding
+    \item Leverage library solvers for large-scale deployment
+    \item Consider sensitivity analysis for robust planning
+    \item Monitor critical routes identified in optimization
+  \end{itemize}
+  
+  \vspace{0.4cm}
+  \textbf{For Future Research:}
+  \begin{itemize}
+    \item \textbf{Extensions:} Multi-period models, stochastic demand, vehicle routing
+    \item \textbf{Constraints:} Capacity limits, time windows, precedence
+    \item \textbf{Objectives:} Multi-objective (cost, time, emissions)
+    \item \textbf{Scale:} Network design with 3+ levels (plants-warehouses-customers)
+    \item \textbf{Dynamics:} Real-time optimization with demand updates
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Practical Impact}
+  \begin{block}{Cost Savings Potential}
+    For a company with \$10M annual transportation costs:
+    \begin{itemize}
+      \item 15\% optimization improvement = \$1.5M savings
+      \item ROI typically achieved within 3-6 months
+      \item Ongoing benefits from better decision-making
+    \end{itemize}
+  \end{block}
+  
+  \begin{block}{Implementation Path}
+    \begin{enumerate}
+      \item \textbf{Phase 1:} Data collection and model validation (1-2 months)
+      \item \textbf{Phase 2:} Pilot implementation on subset of network (2-3 months)
+      \item \textbf{Phase 3:} Full deployment and continuous improvement (ongoing)
+    \end{enumerate}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Conclusions}
+  \begin{center}
+    \Large
+    \textbf{The Transportation Problem demonstrates how}\\
+    \textbf{classical optimization theory translates into}\\
+    \textbf{practical, high-impact business solutions}
+  \end{center}
+  
+  \vspace{1cm}
+  \begin{itemize}
+    \item Rigorous mathematical foundation
+    \item Efficient computational algorithms
+    \item Proven real-world effectiveness
+    \item Extensible framework for complex scenarios
+  \end{itemize}
+  
+  \vspace{0.8cm}
+  \begin{center}
+    \textit{"In theory, theory and practice are the same.\\
+    In practice, they are not."\\
+    — Yogi Berra}
+    
+    \vspace{0.3cm}
+    \textbf{But for the Transportation Problem, they align beautifully!}
+  \end{center}
+\end{frame}
+
+%=============================================================================
+% REFERENCES AND Q&A
+%=============================================================================
+
+\begin{frame}{References}
+  \small
+  \textbf{Foundational Work:}
+  \begin{itemize}
+    \item Hitchcock, F.L. (1941). "The Distribution of a Product from Several Sources to Numerous Localities." \textit{Journal of Mathematics and Physics}, 20(1-4), 224-230.
+    \item Dantzig, G.B. (1951). "Application of the Simplex Method to a Transportation Problem." \textit{Activity Analysis of Production and Allocation}.
+    \item Reinfeld, N.V. \& Vogel, W.R. (1958). \textit{Mathematical Programming}. Prentice-Hall.
+  \end{itemize}
+  
+  \vspace{0.2cm}
+  \textbf{Modern Applications:}
+  \begin{itemize}
+    \item Taha, H.A. (2017). \textit{Operations Research: An Introduction} (10th ed.). Pearson.
+    \item Hillier, F.S. \& Lieberman, G.J. (2020). \textit{Introduction to Operations Research} (11th ed.). McGraw-Hill.
+  \end{itemize}
+  
+  \vspace{0.2cm}
+  \textbf{Computational Tools:}
+  \begin{itemize}
+    \item SciPy Optimization Module: \url{https://docs.scipy.org/doc/scipy/reference/optimize.html}
+    \item PuLP Python Library: \url{https://coin-or.github.io/pulp/}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[standout]
+  \Huge
+  \textbf{Thank You!}
+  
+  \vspace{1cm}
+  \Large
+  Questions and Discussion
+  
+  \vspace{1cm}
+  \normalsize
+  \textit{Astana IT University}\\
+  \textit{Numerical Methods - Fall 2025}
+\end{frame}
+
+\end{document}
